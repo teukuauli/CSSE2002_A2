@@ -1,5 +1,7 @@
 package game.core;
 
+import game.GameModel;
+
 /**
  * Represents a power-up in the game.
  */
@@ -22,6 +24,10 @@ public abstract class PowerUp extends ObjectWithPosition implements PowerUpEffec
      */
     @Override
     public void tick(int tick) {
-
+        if (tick % 10 == 0) {
+            if (y + 1 < GameModel.GAME_HEIGHT) {
+                y++; 
+            }
+        }
     }
 }
