@@ -1,4 +1,4 @@
-package game.tests;
+package game.test.game;
 
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -22,14 +22,25 @@ public class GameModelTest {
      * Simple logger for testing
      */
     private static class TestLogger implements Logger {
-        public String lastMessage = "";
+        private String lastMessage = ""; // Changed from public to private
 
         @Override
         public void log(String message) {
             lastMessage = message;
         }
+        
+        /**
+         * Gets the last message logged.
+         * @return the last message
+         */
+        public String getLastMessage() {
+            return lastMessage;
+        }
     }
 
+    /**
+     * Sets up test fixtures before each test.
+     */
     @Before
     public void setUp() {
         logger = new TestLogger();
@@ -37,6 +48,9 @@ public class GameModelTest {
         model = new GameModel(logger, statsTracker);
     }
 
+    /**
+     * Tears down test fixtures after each test.
+     */
     @After
     public void tearDown() {
         logger = null;
