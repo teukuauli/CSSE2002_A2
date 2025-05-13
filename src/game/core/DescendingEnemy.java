@@ -1,5 +1,7 @@
 package game.core;
 
+import game.GameModel;
+
 /**
  * Represents a movable and interactive object in the space game that moves downwards.
  */
@@ -23,7 +25,6 @@ public abstract class DescendingEnemy extends ObjectWithPosition {
     @Override
     public void tick(int tick) {
         if (tick % 10 == 0) {
-            // Check boundary before moving
             if (y + 1 < GameModel.GAME_HEIGHT) {
                 y++;
             }
