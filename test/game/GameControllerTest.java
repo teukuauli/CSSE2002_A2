@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.HashMap;
 import game.core.*;
 import game.utility.Logger;
-
+import game.exceptions.BoundaryExceededException;
 /**
  * Test class for GameController. Tests the functionality of the GameController class,
  * including achievement tracking, input handling, and game state management.
@@ -214,22 +214,20 @@ public class GameControllerTest {
      */
     @Test
     public void testMovementBeyondBoundaries() {
-        // Use the exact error message that will be thrown
-        String boundaryExceptionMessage = "Cannot move beyond game boundaries";
+        // Create a real ship at the edge of the game area
+        Ship ship = new Ship(GameModel.GAME_WIDTH - 1, 0, 100);
 
-        // Configure the model to detect boundary issues
-        gameModel.setThrowExceptionOnMove(true, boundaryExceptionMessage);
+        // Try to move the ship right (which would exceed boundaries)
+        try {
+            ship.move(Direction.RIGHT);
 
-        // Attempt a movement that should trigger boundary checking
-        gameController.handlePlayerInput("W");
-
-        // Verify that the exact exception message was logged
-        assertTrue("The exact boundary exception message should be logged",
-                mockUi.wasMessageLogged(boundaryExceptionMessage));
-
-        // Optional: You can also test that some movement was attempted but failed
-        assertEquals("Move count should not increase when boundaries are crossed",
-                0, gameModel.getMoveCount());
+            // If we get here, no exception was thrown - test failed
+            fail("Moving beyond boundaries should throw a BoundaryExceededException");
+        } catch (BoundaryExceededException e) {
+            // Expected exception was thrown - test passed
+            assertTrue("Exception message should mention boundary or out of bounds",
+                    e.getMessage().contains("Out of bounds"));
+        }
     }
 
     /**
@@ -446,14 +444,17 @@ public class GameControllerTest {
      */
     @Test
     public void testObjectPositionToStringFormat() {
-        // Test the toString format of a position
-        String positionString = gameModel.getObjectPositionString();
+        // Create a real object with a known position
+        Ship ship = new Ship(10, 20, 100);
 
-        // Check that the format includes a space after the comma
+        // Get the string representation
+        String positionString = ship.toString();
+
+        // Check for correct format: (10, 20) - space after comma but not before
         assertTrue("Position string should include space after comma: " + positionString,
-                positionString.contains(" , "));
-        assertFalse("Position string should not have comma without space: " + positionString,
-                positionString.contains(" , 2"));
+                positionString.contains(", "));  // Correct - space after comma
+        assertFalse("Position string should not have space before comma: " + positionString,
+                positionString.contains(" ,"));  // No space before comma
     }
 
     /**
