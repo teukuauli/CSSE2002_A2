@@ -65,11 +65,11 @@ public class GameController {
 
         // Check if achievements are already registered before adding them
         if (achievementManager.getAchievements().isEmpty()) {
-            achievementManager.addAchievement(new GameAchievement("Survivor", 
+            achievementManager.addAchievement(new GameAchievement("Survivor",
                     "Survive for 120 seconds"));
-            achievementManager.addAchievement(new GameAchievement("Enemy Exterminator", 
+            achievementManager.addAchievement(new GameAchievement("Enemy Exterminator",
                     "Hit 20 shots"));
-            achievementManager.addAchievement(new GameAchievement("Sharp Shooter", 
+            achievementManager.addAchievement(new GameAchievement("Sharp Shooter",
                     "Achieve 99% accuracy"));
         }
     }
@@ -190,24 +190,34 @@ public class GameController {
         double exterminatorProgress = Math.min(1.0, shotsHit / 20.0);
         achievementManager.updateAchievement("Enemy Exterminator", exterminatorProgress);
 
-        // Sharp Shooter achievement: if shotsFired > 10, progress = accuracy / 0.99 capped at 1.0
+        // Sharp Shooter achievement: if shotsFired > 10, progress = accuracy / 0.99 capped at 1.0, else 0
         double sharpShooterProgress = 0.0;
         if (shotsFired > 10) {
             sharpShooterProgress = Math.min(1.0, accuracy / 0.99);
         }
         achievementManager.updateAchievement("Sharp Shooter", sharpShooterProgress);
 
-        // Check and log mastered achievements
+        // Check for newly mastered achievements
+        List<Achievement> achievements = achievementManager.getAchievements();
+        for (Achievement achievement : achievements) {
+            // Check if at master tier and not previously logged
+            if ("Master".equals(achievement.getCurrentTier())) {
+                // Log to the UI that an achievement has been mastered
+                ui.logAchievementMastered(achievement.getName() + " - Mastered");
+            }
+        }
+
+        // Log mastered achievements to the file
         achievementManager.logAchievementMastered();
 
         // Update UI with achievement progress stats
-        for (Achievement achievement : achievementManager.getAchievements()) {
+        for (Achievement achievement : achievements) {
             ui.setAchievementProgressStat(achievement.getName(), achievement.getProgress());
         }
 
         // Log achievements every 100 ticks if verbose
         if (isVerbose && tick % 100 == 0) {
-            ui.logAchievements(achievementManager.getAchievements());
+            ui.logAchievements(achievements);
         }
     }
 
@@ -224,7 +234,7 @@ public class GameController {
         ui.setStat("Score", String.valueOf(model.getShip().getScore()));
         ui.setStat("Health", String.valueOf(model.getShip().getHealth()));
         ui.setStat("Level", String.valueOf(model.getLevel()));
-        ui.setStat("Time Survived", 
+        ui.setStat("Time Survived",
                 String.valueOf((System.currentTimeMillis() - startTime) / 1000) + " seconds");
 
         // Create a single list with all objects in the correct order
