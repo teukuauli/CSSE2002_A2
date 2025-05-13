@@ -10,7 +10,7 @@ import game.achievements.PlayerStatsTracker;
 import game.utility.Logger;
 
 /**
- * Simple tests for GameModel focusing on the key changes from A1 to A2.
+ * Test class for GameModel
  */
 public class GameModelTest {
 
@@ -19,7 +19,7 @@ public class GameModelTest {
     private GameModel model;
 
     /**
-     * Simple logger for testing
+     * Logger for testing
      */
     private static class TestLogger implements Logger {
         public String lastMessage = "";
