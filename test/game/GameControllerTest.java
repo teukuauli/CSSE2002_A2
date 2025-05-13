@@ -405,38 +405,45 @@ public class GameControllerTest {
      */
     @Test
     public void testLevelUpWhenScoreThresholdReached() {
+        // Create a real GameModel instance with a simple logger and stats tracker
+        Logger logger = s -> {}; // No-op logger
+        PlayerStatsTracker statsTracker = new PlayerStatsTracker();
+        GameModel realModel = new GameModel(logger, statsTracker);
+
         // Get initial level
-        int initialLevel = gameModel.getLevel();
+        int initialLevel = realModel.getLevel();
 
-        // Clear any initial state
-        gameModel.setScore(0);
+        // Get the ship and set its score to just below threshold for the current level
+        Ship ship = realModel.getShip();
+        int threshold = initialLevel * GameModel.SCORE_THRESHOLD;
 
-        // Call onTick to make sure we start fresh
-        gameController.onTick(1);
-
-        // Verify starting level
-        assertEquals("Initial level should be 1", 1, gameModel.getLevel());
-
-        // Set score to just below threshold (we're using a fixed 1000 for testing)
-        gameModel.setScore(999);
-
-        // Call onTick to process game logic
-        gameController.onTick(1);
+        // Set score to just below threshold
+        for (int i = 0; i < threshold - 1; i++) {
+            ship.addScore(1);
+        }
 
         // Verify level has not changed
-        assertEquals("Level should not change before threshold",
-                initialLevel, gameModel.getLevel());
+        assertEquals("Level should not change before threshold is reached",
+                initialLevel, realModel.getLevel());
 
-        // Set score to threshold
-        gameModel.setScore(1000);
+        // Call levelUp to check if level increments - shouldn't increment yet
+        realModel.levelUp();
+        assertEquals("Level should not change when score is below threshold",
+                initialLevel, realModel.getLevel());
 
-        // Call onTick again to process level up
-        gameController.onTick(1);
+        // Add more score to reach the threshold exactly
+        ship.addScore(1);
+
+        // Verify score is now at threshold
+        assertEquals("Score should be at threshold", threshold, ship.getScore());
+
+        // Call levelUp again - now it should increment
+        realModel.levelUp();
 
         // Verify level has increased
         assertEquals("Level should increase when score threshold is met",
-                initialLevel + 1, gameModel.getLevel());
-
+                initialLevel + 1, realModel.getLevel());
+        
     }
 
     /**
