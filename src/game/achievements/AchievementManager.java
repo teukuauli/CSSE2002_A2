@@ -86,7 +86,10 @@ public class AchievementManager {
             String achievementName = entry.getKey();
             Achievement achievement = entry.getValue();
 
-            if ("Master".equals(achievement.getCurrentTier()) && !loggedStatus.get(achievementName)) {
+            boolean isMaster = "Master".equals(achievement.getCurrentTier());
+            boolean notLogged = !loggedStatus.get(achievementName);
+            
+            if (isMaster && notLogged) {
                 String logData = String.format("%s - Mastered", achievementName);
                 achievementFile.save(logData);
                 loggedStatus.put(achievementName, true);
