@@ -1,9 +1,12 @@
 package game.core;
+
 import game.ui.ObjectGraphic;
+
 /**
  * Represents a bullet fired by the ship.
  */
 public class Bullet extends ObjectWithPosition {
+
     /**
      * Creates a bullet at the given coordinates.
      *
