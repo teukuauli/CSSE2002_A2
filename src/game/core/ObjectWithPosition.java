@@ -33,4 +33,15 @@ public abstract class ObjectWithPosition implements SpaceObject {
     public int getY() {
         return y;
     }
+
+    /**
+     * Returns a string representation of the Object.
+     *
+     * @return a string identifying the object's name and current position, eg. Bullet(2, 4)
+     */
+    @Override
+    public String toString() {
+        String className = this.getClass().getSimpleName();
+        return className + "(" + x + ", " + y + ")";
+    }
 }
