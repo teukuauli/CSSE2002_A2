@@ -63,9 +63,9 @@ public class GameAchievement implements Achievement {
     public String getCurrentTier() {
         if (progress < 0.5) {
             return "Novice";
-        } else if (progress < 0.999) {
+        } else if (progress < 1.0) {
             return "Expert";
-        } else {
+        } else {  
             return "Master";
         }
     }
