@@ -443,7 +443,7 @@ public class GameControllerTest {
         // Verify level has increased
         assertEquals("Level should increase when score threshold is met",
                 initialLevel + 1, realModel.getLevel());
-        
+
     }
 
     /**
@@ -469,16 +469,20 @@ public class GameControllerTest {
      */
     @Test
     public void testShieldPowerUpAddsScore() {
-        // Reset score
+        // Setup
         gameModel.setScore(0);
         int initialScore = gameModel.getScore();
 
-        // Simulate collecting a shield power-up
+        // Act
         gameModel.collectShieldPowerUp();
+        int newScore = gameModel.getScore();
 
-        // Verify score has increased
-        assertTrue("Shield power-up should add to score",
-                gameModel.getScore() > initialScore);
+        // Assert
+        if (newScore == initialScore) {
+            fail("BUG DETECTED: Shield power-up does not add any score!");
+        } else {
+            assertTrue("Shield power-up should add to score", newScore > initialScore);
+        }
     }
 
     /**
