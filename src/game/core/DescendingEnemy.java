@@ -1,7 +1,5 @@
 package game.core;
 
-import game.GameModel;
-
 /**
  * Represents a movable and interactive object in the space game that moves downwards.
  */
