@@ -24,9 +24,7 @@ public class Bullet extends ObjectWithPosition {
      */
     @Override
     public void tick(int tick) {
-        if (y - 1 >= 0) {
-            y--; 
-        }
+        y--; // Bullets always move upward
     }
     /**
      * Returns a new ObjectGraphic with the appropriate text representation and image path.<br>
