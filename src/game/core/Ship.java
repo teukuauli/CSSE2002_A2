@@ -10,7 +10,7 @@ public class Ship extends Controllable {
     private static final int STARTING_SCORE = 0;
     private static final int STARTING_X = 5;
     private static final int STARTING_Y = 10;
-    private int HEALTH;
+    private int health; // Changed from HEALTH to health for naming convention compliance
 
 
     private int score;
@@ -25,7 +25,7 @@ public class Ship extends Controllable {
      */
     public Ship(int x, int y, int health) {
         super(x, y);
-        this.HEALTH = health;
+        this.health = health; // Changed from HEALTH to health
         this.score = STARTING_SCORE;
     }
 
@@ -58,9 +58,9 @@ public class Ship extends Controllable {
      * @param damage the amount of damage taken.
      */
     public void takeDamage(int damage) {
-        HEALTH -= damage;
-        if (HEALTH < 0) {
-            HEALTH = 0; // Prevent health from dropping below 0
+        health -= damage; 
+        if (health < 0) { 
+            health = 0; //Prevent health from dropping below 0
         }
     }
 
@@ -71,9 +71,9 @@ public class Ship extends Controllable {
      * @param num the amount of health restored.
      */
     public void heal(int num) {
-        HEALTH += num;
-        if (HEALTH > 100) {
-            HEALTH = 100; // Cap health at 100
+        health += num; // Changed from HEALTH to health
+        if (health > 100) { // Changed from HEALTH to health
+            health = 100; // Changed from HEALTH to health - Cap health at 100
         }
     }
 
@@ -92,7 +92,7 @@ public class Ship extends Controllable {
      * @return the current health.
      */
     public int getHealth() {
-        return HEALTH;
+        return health; // Changed from HEALTH to health
     }
 
     /**
@@ -111,6 +111,6 @@ public class Ship extends Controllable {
      */
     @Override
     public void tick(int tick) {
-
+        // No tick-dependent behavior
     }
 }
