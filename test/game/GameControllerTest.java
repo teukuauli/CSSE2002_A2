@@ -443,7 +443,6 @@ public class GameControllerTest {
         // Verify level has increased
         assertEquals("Level should increase when score threshold is met",
                 initialLevel + 1, realModel.getLevel());
-
     }
 
     /**
@@ -470,14 +469,14 @@ public class GameControllerTest {
     @Test
     public void testShieldPowerUpAddsScore() {
         ShieldPowerUp powerUp = new ShieldPowerUp(0, 0);
-        
+
         Ship ship = new Ship(10, 10, 100);
         int initialScore = ship.getScore();
 
         // Apply the shield power-up effect directly
         powerUp.applyEffect(ship);
 
-        // Check if the score increased 
+        // Check if the score increased
         int newScore = ship.getScore();
 
         assertTrue("BUG DETECTED: Shield power-up should add score when collected",
