@@ -14,36 +14,49 @@ import java.util.HashMap;
 import game.core.SpaceObject;
 import game.utility.Logger;
 
+/**
+ * Test class for GameController. Tests the functionality of the GameController class,
+ * including achievement tracking, input handling, and game state management.
+ */
 public class GameControllerTest {
 
     private GameController gameController;
-    private TestUI mockUI;
+    private TestUi mockUi;
     private TestGameModel gameModel;
     private PlayerStatsTracker statsTracker;
     private AchievementManager achievementManager;
     private TestFileHandler fileHandler;
 
+    /**
+     * Sets up the test environment before each test.
+     * Creates mock objects and initializes the GameController with test dependencies.
+     */
     @Before
     public void setUp() {
         // Create the necessary objects for testing
-        mockUI = new TestUI();
+        mockUi = new TestUi();
         statsTracker = new TestStatsTracker();
-        gameModel = new TestGameModel(mockUI::log, statsTracker);
+        gameModel = new TestGameModel(mockUi::log, statsTracker);
 
         // Create AchievementManager with a test FileHandler
         fileHandler = new TestFileHandler();
         achievementManager = new AchievementManager(fileHandler);
 
         // Add some test achievements
-        achievementManager.addAchievement(new GameAchievement("Survivor", "Survive for 120 seconds"));
-        achievementManager.addAchievement(new GameAchievement("Enemy Exterminator", "Hit 20 shots"));
-        achievementManager.addAchievement(new GameAchievement("Sharp Shooter", "Achieve 99% accuracy"));
+        achievementManager.addAchievement(
+                new GameAchievement("Survivor", "Survive for 120 seconds"));
+        achievementManager.addAchievement(
+                new GameAchievement("Enemy Exterminator", "Hit 20 shots"));
+        achievementManager.addAchievement(
+                new GameAchievement("Sharp Shooter", "Achieve 99% accuracy"));
 
         // Initialize GameController with test objects
-        gameController = new GameController(mockUI, gameModel, achievementManager);
+        gameController = new GameController(mockUi, gameModel, achievementManager);
     }
 
-    // Test for Limitation #1 - Achievement System
+    /**
+     * Tests that the achievement system exists and is properly initialized.
+     */
     @Test
     public void testAchievementSystemExists() {
         // Test that achievement manager is properly initialized
@@ -60,13 +73,16 @@ public class GameControllerTest {
 
         for (Achievement achievement : achievements) {
             if ("Survivor".equals(achievement.getName())) {
-                assertEquals("Survivor description should match", "Survive for 120 seconds", achievement.getDescription());
+                assertEquals("Survivor description should match", 
+                        "Survive for 120 seconds", achievement.getDescription());
                 foundSurvivor = true;
             } else if ("Enemy Exterminator".equals(achievement.getName())) {
-                assertEquals("Enemy Exterminator description should match", "Hit 20 shots", achievement.getDescription());
+                assertEquals("Enemy Exterminator description should match", 
+                        "Hit 20 shots", achievement.getDescription());
                 foundExterminator = true;
             } else if ("Sharp Shooter".equals(achievement.getName())) {
-                assertEquals("Sharp Shooter description should match", "Achieve 99% accuracy", achievement.getDescription());
+                assertEquals("Sharp Shooter description should match", 
+                        "Achieve 99% accuracy", achievement.getDescription());
                 foundSharpShooter = true;
             }
         }
@@ -76,19 +92,24 @@ public class GameControllerTest {
         assertTrue("Should have Sharp Shooter achievement", foundSharpShooter);
     }
 
-    // Test for Limitation #2 - Constructor Options
+    /**
+     * Tests that the constructor correctly accepts different combinations of parameters.
+     */
     @Test
     public void testConstructorWithAchievementManager() {
         // Test that constructor accepts UI, GameModel, and AchievementManager
-        GameController controller = new GameController(mockUI, gameModel, achievementManager);
-        assertNotNull("Controller should be created with UI, GameModel, and AchievementManager", controller);
+        GameController controller = new GameController(mockUi, gameModel, achievementManager);
+        assertNotNull("Controller should be created with UI, GameModel, and AchievementManager", 
+                controller);
 
         // Test that constructor accepts UI and AchievementManager
-        GameController controller2 = new GameController(mockUI, achievementManager);
+        GameController controller2 = new GameController(mockUi, achievementManager);
         assertNotNull("Controller should be created with UI and AchievementManager", controller2);
     }
 
-    // Test for Limitation #3 - Missing Methods
+    /**
+     * Tests that the refreshAchievements method exists and updates achievement progress.
+     */
     @Test
     public void testRefreshAchievementsMethod() {
         try {
@@ -104,7 +125,8 @@ public class GameControllerTest {
             List<Achievement> achievements = achievementManager.getAchievements();
             for (Achievement achievement : achievements) {
                 if ("Enemy Exterminator".equals(achievement.getName())) {
-                    assertTrue("Enemy Exterminator progress should be updated", achievement.getProgress() > 0);
+                    assertTrue("Enemy Exterminator progress should be updated", 
+                            achievement.getProgress() > 0);
                 }
             }
         } catch (NoSuchMethodError e) {
@@ -112,14 +134,21 @@ public class GameControllerTest {
         }
     }
 
+    /**
+     * Tests that the getStatsTracker method exists and returns the correct tracker.
+     */
     @Test
     public void testGetStatsTrackerMethod() {
         // Test that getStatsTracker method exists and returns the correct tracker
         PlayerStatsTracker returnedTracker = gameController.getStatsTracker();
         assertNotNull("getStatsTracker should return a non-null tracker", returnedTracker);
-        assertEquals("getStatsTracker should return the same tracker instance", statsTracker, returnedTracker);
+        assertEquals("getStatsTracker should return the same tracker instance", 
+                statsTracker, returnedTracker);
     }
 
+    /**
+     * Tests that the setVerbose method exists and affects verbose state.
+     */
     @Test
     public void testSetVerboseMethod() {
         // Test that setVerbose method exists and affects verbose state
@@ -127,31 +156,37 @@ public class GameControllerTest {
         assertTrue("setVerbose method exists", true);
 
         // Test verbose behavior by triggering a verbose log
-        mockUI.resetLogs();
+        mockUi.resetLogs();
         gameController.handlePlayerInput("W");
 
         // Test that verbose logging was triggered
-        assertTrue("Verbose logging should be enabled", mockUI.wasShipMovementLogged());
+        assertTrue("Verbose logging should be enabled", mockUi.wasShipMovementLogged());
 
         // Test turning verbose off
         gameController.setVerbose(false);
-        mockUI.resetLogs();
+        mockUi.resetLogs();
 
         // Test that verbose logging is now disabled
         gameController.handlePlayerInput("W");
-        assertFalse("Verbose logging should be disabled", mockUI.wasShipMovementLogged());
+        assertFalse("Verbose logging should be disabled", mockUi.wasShipMovementLogged());
     }
 
-    // Test for Limitation #4 - Game State Handling
+    /**
+     * Tests verbose mode for detailed logging.
+     */
     @Test
     public void testVerboseModeForDetailedLogging() {
-
+        // Implementation not provided in the original code
     }
 
+    /**
+     * Tests that achievement mastery is properly notified.
+     */
     @Test
     public void testAchievementMasteryNotification() {
         // Set up a test achievement that's almost mastered
-        GameAchievement testAchievement = new GameAchievement("Test Achievement", "Test Description");
+        GameAchievement testAchievement = new GameAchievement("Test Achievement", 
+                "Test Description");
         testAchievement.setProgress(0.999); // Master tier starts at 0.999
         achievementManager.addAchievement(testAchievement);
 
@@ -173,19 +208,24 @@ public class GameControllerTest {
         assertTrue("Achievement mastery should be logged to the file", masteryLogged);
     }
 
+    /**
+     * Tests that game over is properly handled.
+     */
     @Test
     public void testGameOverHandling() {
         gameModel.setGameOverCondition(true);
 
         // Reset UI verification data
-        mockUI.resetVerification();
+        mockUi.resetVerification();
 
         gameController.onTick(1);
 
-        assertTrue("Game should be paused on game over", mockUI.wasMethodCalled("pause"));
+        assertTrue("Game should be paused on game over", mockUi.wasMethodCalled("pause"));
     }
 
-    // Test for Limitation #5 - Input Handling
+    /**
+     * Tests that input is properly integrated with achievements.
+     */
     @Test
     public void testInputIntegrationWithAchievements() {
         // Test firing a bullet increments shots fired in stats tracker
@@ -195,48 +235,63 @@ public class GameControllerTest {
                 initialShotsFired + 1, statsTracker.getShotsFired());
     }
 
-    // Test for Limitation #6 - Player Statistics
+    /**
+     * Tests that player statistics are properly tracked.
+     */
     @Test
     public void testPlayerStatisticsTracking() {
         // Test shot accuracy
         statsTracker.recordShotFired();
         statsTracker.recordShotFired();
         statsTracker.recordShotHit();
-        assertEquals("Accuracy should be calculated correctly", 0.5, statsTracker.getAccuracy(), 0.001);
+        assertEquals("Accuracy should be calculated correctly", 
+                0.5, statsTracker.getAccuracy(), 0.001);
 
         // Test shots fired/hit tracking
         assertEquals("Shots fired should be tracked", 2, statsTracker.getShotsFired());
         assertEquals("Shots hit should be tracked", 1, statsTracker.getShotsHit());
     }
 
-    // Test for Limitation #7 - Progress Tracking
+    /**
+     * Tests tier-based progression for achievements.
+     */
     @Test
     public void testTierBasedProgression() {
         // Test tier progression
-        GameAchievement testAchievement = new GameAchievement("Test Tier", "Test tier progression");
+        GameAchievement testAchievement = new GameAchievement("Test Tier", 
+                "Test tier progression");
 
         // Novice tier (< 0.5)
         testAchievement.setProgress(0.4);
-        assertEquals("Progress < 0.5 should be Novice tier", "Novice", testAchievement.getCurrentTier());
+        assertEquals("Progress < 0.5 should be Novice tier", 
+                "Novice", testAchievement.getCurrentTier());
 
         // Expert tier (0.5 <= x < 0.999)
         testAchievement.setProgress(0.7);
-        assertEquals("Progress >= 0.5 and < 0.999 should be Expert tier", "Expert", testAchievement.getCurrentTier());
+        assertEquals("Progress >= 0.5 and < 0.999 should be Expert tier", 
+                "Expert", testAchievement.getCurrentTier());
 
         // Master tier (>= 0.999)
         testAchievement.setProgress(0.999);
-        assertEquals("Progress >= 0.999 should be Master tier", "Master", testAchievement.getCurrentTier());
+        assertEquals("Progress >= 0.999 should be Master tier", 
+                "Master", testAchievement.getCurrentTier());
     }
 
-    // Test for Limitation #8 - Game Flow
+    /**
+     * Tests that rendering includes achievements.
+     */
     @Test
     public void testRenderingWithAchievements() {
         // Test that achievements are included in rendering
-        mockUI.resetVerification();
+        mockUi.resetVerification();
         gameController.renderGame();
-        assertTrue("Game rendering should involve setting UI stats", mockUI.wasMethodCalled("setStat"));
+        assertTrue("Game rendering should involve setting UI stats", 
+                mockUi.wasMethodCalled("setStat"));
     }
 
+    /**
+     * Tests the execution order in onTick method.
+     */
     @Test
     public void testExecutionOrderInOnTick() {
         // Test that the method executes without errors
@@ -245,19 +300,26 @@ public class GameControllerTest {
         assertTrue("onTick should execute without errors", true);
     }
 
+    /**
+     * Tests that achievements are refreshed during gameplay.
+     */
     @Test
     public void testAchievementRefreshDuringGameplay() {
-        mockUI.resetVerification();
+        mockUi.resetVerification();
 
         // Call onTick
         gameController.onTick(1);
 
         assertTrue("UI methods should be called during achievement refresh",
-                mockUI.wasMethodCalled("setStat") || mockUI.wasMethodCalled("setAchievementProgressStat"));
+                mockUi.wasMethodCalled("setStat") 
+                || mockUi.wasMethodCalled("setAchievementProgressStat"));
     }
 
     // Helper classes
 
+    /**
+     * A test implementation of PlayerStatsTracker for testing purposes.
+     */
     private static class TestStatsTracker extends PlayerStatsTracker {
         private int shotsFired = 0;
         private int shotsHit = 0;
@@ -289,11 +351,16 @@ public class GameControllerTest {
 
         @Override
         public double getAccuracy() {
-            if (shotsFired == 0) return 0.0;
+            if (shotsFired == 0) {
+                return 0.0;
+            }
             return (double) shotsHit / shotsFired;
         }
     }
 
+    /**
+     * A test implementation of GameModel for testing purposes.
+     */
     private static class TestGameModel extends GameModel {
         private boolean gameOverCondition = false;
 
@@ -311,7 +378,10 @@ public class GameControllerTest {
         }
     }
 
-    private static class TestUI implements UI {
+    /**
+     * A test implementation of UI for testing purposes.
+     */
+    private static class TestUi implements UI {
         private Map<String, Boolean> methodCalls = new HashMap<>();
         private StringBuilder logBuilder = new StringBuilder();
 
@@ -388,6 +458,9 @@ public class GameControllerTest {
         }
     }
 
+    /**
+     * A test implementation of AchievementFile for testing purposes.
+     */
     private static class TestFileHandler implements AchievementFile {
         private String fileLocation = DEFAULT_FILE_LOCATION;
         private List<String> savedData = new ArrayList<>();
