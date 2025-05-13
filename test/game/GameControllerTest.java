@@ -469,20 +469,17 @@ public class GameControllerTest {
      */
     @Test
     public void testShieldPowerUpAddsScore() {
-        // Reset score in our test model
+        // Setup
         gameModel.setScore(0);
-
-        // Track initial score
         int initialScore = gameModel.getScore();
 
-        // Call collectShieldPowerUp
+        // Act
         gameModel.collectShieldPowerUp();
-
-        // Get new score
         int newScore = gameModel.getScore();
 
-        if (newScore == initialScore) {
-            fail("BUG DETECTED: Shield power-up does not add any score when collected!");
+        // Assert - intentionally fail if score doesn't increase
+        if (newScore <= initialScore) {
+            fail("BUG DETECTED: Shield power-up does not add any score!");
         }
     }
     /**
@@ -582,7 +579,7 @@ public class GameControllerTest {
         }
 
         public void collectShieldPowerUp() {
-
+            score += 0;
         }
 
         // Modified for testing purposes
