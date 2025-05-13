@@ -23,7 +23,7 @@ public class GameModel {
     public static final double ENEMY_SPAWN_RATE = 0.5; // Percentage of asteroid spawn chance
     public static final double POWER_UP_SPAWN_RATE = 0.25; // Percentage of asteroid spawn chance
 
-    public final Random random = new Random(); // ONLY USED IN this.spawnObjects()
+    private final Random random = new Random(); // ONLY USED IN this.spawnObjects()
     private final List<SpaceObject> spaceObjects; // List of all objects
     private Ship ship; // Changed from boat to ship
     private int level; // Changed from lvl to level
@@ -85,6 +85,14 @@ public class GameModel {
     public void setVerbose(boolean verbose) {
         this.isVerbose = verbose;
     }
+    
+    /**
+     * Returns the random number generator used by this model.
+     * @return the Random instance.
+     */
+    public Random getRandom() {
+        return random;
+    }
 
     /**
      * Adds a SpaceObject to the game.
@@ -135,8 +143,10 @@ public class GameModel {
         if (random.nextInt(100) < spawnRate * POWER_UP_SPAWN_RATE) {
             int x = random.nextInt(GAME_WIDTH);
             int y = 0;
-            PowerUp powerUp = random.nextBoolean() ?
-                    new ShieldPowerUp(x, y) : new HealthPowerUp(x, y);
+            // Fixed ternary operator wrapping
+            PowerUp powerUp = random.nextBoolean() 
+                    ? new ShieldPowerUp(x, y) 
+                    : new HealthPowerUp(x, y);
             if (!isPositionOccupied(x, y)) {
                 spaceObjects.add(powerUp);
             }
@@ -225,12 +235,16 @@ public class GameModel {
             }
 
             for (SpaceObject target : spaceObjects) {
-                if (target instanceof Enemy && bullet.getX() == target.getX() && bullet.getY() == target.getY()) {
+                if (target instanceof Enemy 
+                        && bullet.getX() == target.getX() 
+                        && bullet.getY() == target.getY()) {
                     toRemove.add(bullet);
                     toRemove.add(target);
                     statsTracker.recordShotHit(); // Record shot hit for Enemy hits
                     break;
-                } else if (target instanceof Asteroid && bullet.getX() == target.getX() && bullet.getY() == target.getY()) {
+                } else if (target instanceof Asteroid 
+                        && bullet.getX() == target.getX() 
+                        && bullet.getY() == target.getY()) {
                     toRemove.add(bullet);
                     break;
                 }
@@ -262,9 +276,10 @@ public class GameModel {
      * @return true if the SpaceObject is in bounds, false otherwise
      */
     public static boolean isInBounds(SpaceObject spaceObject) {
-        return spaceObject.getX() >= 0 &&
-                spaceObject.getX() < GAME_WIDTH &&
-                spaceObject.getY() >= 0 &&
-                spaceObject.getY() < GAME_HEIGHT;
+        // Fixed operator wrapping for && operators
+        return spaceObject.getX() >= 0 
+                && spaceObject.getX() < GAME_WIDTH 
+                && spaceObject.getY() >= 0 
+                && spaceObject.getY() < GAME_HEIGHT;
     }
 }
