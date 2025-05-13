@@ -25,7 +25,7 @@ public class GameModel {
 
     private final Random random = new Random(); // ONLY USED IN this.spawnObjects()
     private final List<SpaceObject> spaceObjects; // List of all objects
-    private Ship ship; // Changed from boat to ship
+    public Ship ship; // Changed from boat to ship
     private int level; // Changed from lvl to level
     private int spawnRate; // The current game spawn rate
     private Logger logger; // Changed from wrter to logger
