@@ -23,14 +23,14 @@ public class GameModel {
     public static final double ENEMY_SPAWN_RATE = 0.5; // Percentage of asteroid spawn chance
     public static final double POWER_UP_SPAWN_RATE = 0.25; // Percentage of asteroid spawn chance
 
-    public final Random random = new Random(); // ONLY USED IN this.spawnObjects()
+    private final Random random = new Random(); // ONLY USED IN this.spawnObjects()
     private final List<SpaceObject> spaceObjects; // List of all objects
-    private Ship ship;
-    private int level;
+    private Ship ship; // Changed from boat to ship
+    private int level; // Changed from lvl to level
     private int spawnRate; // The current game spawn rate
-    private Logger logger;
-    private PlayerStatsTracker statsTracker;
-    private boolean isVerbose = false;
+    private Logger logger; // Changed from wrter to logger
+    private PlayerStatsTracker statsTracker; // Added statsTracker field
+    private boolean isVerbose = false; // Added isVerbose field
 
     /**
      * Models a game, storing and modifying data relevant to the game.
@@ -87,6 +87,14 @@ public class GameModel {
     }
 
     /**
+     * Returns the random number generator used by this model.
+     * @return the Random instance.
+     */
+    public Random getRandom() {
+        return random;
+    }
+
+    /**
      * Adds a SpaceObject to the game.
      * @param object the SpaceObject to be added to the game.
      */
@@ -113,41 +121,35 @@ public class GameModel {
      * Spawns new objects (Asteroids, Enemies, and PowerUp) at random positions.
      */
     public void spawnObjects() {
-        // 1. Check if an Asteroid should spawn
-        boolean spawnAsteroid = random.nextInt(100) < spawnRate;
-
-        // 2. Get asteroid x-coordinate if spawning
-        int asteroidX = random.nextInt(GAME_WIDTH);
-
-        // 3. Check if an Enemy should spawn
-        boolean spawnEnemy = random.nextInt(100) < spawnRate * ENEMY_SPAWN_RATE;
-
-        // 4. Get enemy x-coordinate if spawning
-        int enemyX = random.nextInt(GAME_WIDTH);
-
-        // 5. Check if a PowerUp should spawn
-        boolean spawnPowerUp = random.nextInt(100) < spawnRate * POWER_UP_SPAWN_RATE;
-
-        // 6. Get powerup x-coordinate if spawning
-        int powerUpX = random.nextInt(GAME_WIDTH);
-
-        // 7. Determine powerup type
-        boolean isShieldPowerUp = random.nextBoolean();
-
-        // Now add objects if not in occupied positions
-        if (spawnAsteroid && !isPositionOccupied(asteroidX, 0)) {
-            spaceObjects.add(new Asteroid(asteroidX, 0));
+        // Spawn asteroids with a chance determined by spawnRate
+        if (random.nextInt(100) < spawnRate) {
+            int x = random.nextInt(GAME_WIDTH); // Random x-coordinate
+            int y = 0; // Spawn at the top of the screen
+            if (!isPositionOccupied(x, y)) {
+                spaceObjects.add(new Asteroid(x, y));
+            }
         }
 
-        if (spawnEnemy && !isPositionOccupied(enemyX, 0)) {
-            spaceObjects.add(new Enemy(enemyX, 0));
+        // Spawn enemies with a lower chance
+        if (random.nextInt(100) < spawnRate * ENEMY_SPAWN_RATE) {
+            int x = random.nextInt(GAME_WIDTH);
+            int y = 0;
+            if (!isPositionOccupied(x, y)) {
+                spaceObjects.add(new Enemy(x, y));
+            }
         }
 
-        if (spawnPowerUp && !isPositionOccupied(powerUpX, 0)) {
-            PowerUp powerUp = isShieldPowerUp
-                    ? new ShieldPowerUp(powerUpX, 0)
-                    : new HealthPowerUp(powerUpX, 0);
-            spaceObjects.add(powerUp);
+        // Spawn power-ups with an even lower chance
+        if (random.nextInt(100) < spawnRate * POWER_UP_SPAWN_RATE) {
+            int x = random.nextInt(GAME_WIDTH);
+            int y = 0;
+            // Fixed ternary operator wrapping
+            PowerUp powerUp = random.nextBoolean()
+                    ? new ShieldPowerUp(x, y)
+                    : new HealthPowerUp(x, y);
+            if (!isPositionOccupied(x, y)) {
+                spaceObjects.add(powerUp);
+            }
         }
     }
 
@@ -274,6 +276,7 @@ public class GameModel {
      * @return true if the SpaceObject is in bounds, false otherwise
      */
     public static boolean isInBounds(SpaceObject spaceObject) {
+        // Fixed operator wrapping for && operators
         return spaceObject.getX() >= 0
                 && spaceObject.getX() < GAME_WIDTH
                 && spaceObject.getY() >= 0
