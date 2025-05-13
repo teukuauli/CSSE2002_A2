@@ -23,7 +23,10 @@ public abstract class DescendingEnemy extends ObjectWithPosition {
     @Override
     public void tick(int tick) {
         if (tick % 10 == 0) {
-            y++; // Move downward
+            // Check boundary before moving
+            if (y + 1 < GameModel.GAME_HEIGHT) {
+                y++;
+            }
         }
     }
 }
