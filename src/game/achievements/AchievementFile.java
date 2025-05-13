@@ -10,7 +10,7 @@ public interface AchievementFile {
     /**
      * If setFileLocation is not called, this value should be used.
      */
-    static final String DEFAULT_FILE_LOCATION = "achievements.dat";
+    static final String DEFAULT_FILE_LOCATION = "achievements.log";
 
     /**
      * Sets the file location to save to.
