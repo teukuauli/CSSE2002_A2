@@ -469,16 +469,19 @@ public class GameControllerTest {
      */
     @Test
     public void testShieldPowerUpAddsScore() {
-        // Setup
-        gameModel.setScore(0);
-        int initialScore = gameModel.getScore();
+        ShieldPowerUp powerUp = new ShieldPowerUp(0, 0);
+        
+        Ship ship = new Ship(10, 10, 100);
+        int initialScore = ship.getScore();
 
-        // Act
-        gameModel.collectShieldPowerUp();
-        int newScore = gameModel.getScore();
+        // Apply the shield power-up effect directly
+        powerUp.applyEffect(ship);
 
-        // Assert - for this specific scenario, we expect score to NOT change
-        assertEquals("Shield power-up should not add score", initialScore, newScore);
+        // Check if the score increased 
+        int newScore = ship.getScore();
+
+        assertTrue("BUG DETECTED: Shield power-up should add score when collected",
+                newScore > initialScore);
     }
     /**
      * A test implementation of PlayerStatsTracker for testing purposes.
