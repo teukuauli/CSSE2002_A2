@@ -582,7 +582,7 @@ public class GameControllerTest {
         }
 
         public void collectShieldPowerUp() {
-            score += 50;
+
         }
 
         // Modified for testing purposes
