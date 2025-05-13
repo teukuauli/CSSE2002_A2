@@ -173,6 +173,14 @@ public class GameController {
      * @param tick the provided tick
      */
     public void refreshAchievements(int tick) {
+        // Get all achievements and store their current tiers before updating
+        List<Achievement> achievements = achievementManager.getAchievements();
+        java.util.Map<String, String> previousTiers = new java.util.HashMap<>();
+
+        for (Achievement achievement : achievements) {
+            previousTiers.put(achievement.getName(), achievement.getCurrentTier());
+        }
+
         // Calculate progress for each achievement
         PlayerStatsTracker statsTracker = getStatsTracker();
         long elapsedSeconds = statsTracker.getElapsedSeconds();
@@ -197,12 +205,13 @@ public class GameController {
         }
         achievementManager.updateAchievement("Sharp Shooter", sharpShooterProgress);
 
-        // Check for newly mastered achievements
-        List<Achievement> achievements = achievementManager.getAchievements();
+        // Check for newly mastered achievements by comparing current tiers to previous tiers
         for (Achievement achievement : achievements) {
-            // Check if at master tier and not previously logged
-            if ("Master".equals(achievement.getCurrentTier())) {
-                // Log to the UI that an achievement has been mastered
+            String previousTier = previousTiers.get(achievement.getName());
+            String currentTier = achievement.getCurrentTier();
+
+            // Only log to UI if achievement newly reached Master tier
+            if ("Master".equals(currentTier) && !"Master".equals(previousTier)) {
                 ui.logAchievementMastered(achievement.getName() + " - Mastered");
             }
         }
