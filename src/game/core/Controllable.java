@@ -36,31 +36,32 @@ public abstract class Controllable extends ObjectWithPosition {
      * @hint game dimensions are stored in the model.
      */
     public void move(Direction direction) throws BoundaryExceededException {
+        int newX = x;
+        int newY = y;
+
         switch (direction) {
-            case UP -> {
-                if (y <= 0) {
-                    throw new BoundaryExceededException("Cannot move up. Out of bounds!");
-                }
-                y--;
-            }
-            case DOWN -> {
-                if (y + 1 >= GAME_HEIGHT) {
-                    throw new BoundaryExceededException("Cannot move down. Out of bounds!");
-                }
-                y++;
-            }
-            case LEFT -> {
-                if (x <= 0) {
-                    throw new BoundaryExceededException("Cannot move left. Out of bounds!");
-                }
-                x--;
-            }
-            case RIGHT -> {
-                if (x + 1 >= GAME_WIDTH) {
-                    throw new BoundaryExceededException("Cannot move right. Out of bounds!");
-                }
-                x++;
-            }
+            case UP -> newY--;
+            case DOWN -> newY++;
+            case LEFT -> newX--;
+            case RIGHT -> newX++;
         }
+
+        // Check boundaries BEFORE updating position
+        if (newX < 0) {
+            throw new BoundaryExceededException("Cannot move left. Out of bounds!");
+        }
+        if (newX >= GAME_WIDTH) {
+            throw new BoundaryExceededException("Cannot move right. Out of bounds!");
+        }
+        if (newY < 0) {
+            throw new BoundaryExceededException("Cannot move up. Out of bounds!");
+        }
+        if (newY >= GAME_HEIGHT) {
+            throw new BoundaryExceededException("Cannot move down. Out of bounds!");
+        }
+
+        // Update position if we didn't throw an exception
+        x = newX;
+        y = newY;
     }
 }
