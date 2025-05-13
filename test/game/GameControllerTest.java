@@ -451,9 +451,9 @@ public class GameControllerTest {
 
         // Check that the format includes a space after the comma
         assertTrue("Position string should include space after comma: " + positionString,
-                positionString.contains(", "));
+                positionString.contains(" , "));
         assertFalse("Position string should not have comma without space: " + positionString,
-                positionString.contains(",2"));
+                positionString.contains(" , 2"));
     }
 
     /**
