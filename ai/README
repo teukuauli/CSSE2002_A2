@@ -1,0 +1,130 @@
+Help me to create SOLID principle:
+-prompt: i want to make SOLID principle for my document, please explain to me the detail of this principle, and what should i do
+-result: Sure! The SOLID principles are a set of five design principles intended to make software designs more understandable, flexible, and maintainable. These principles are especially useful in object-oriented programming and are often followed when writing clean, scalable, and testable code.
+
+         Here's a breakdown of what each principle means, with guidance on what you should do when applying it in your document or code:
+
+         🔹 1. Single Responsibility Principle (SRP)
+         Definition: A class should have only one reason to change, meaning it should only have one job or responsibility.
+
+         What You Should Do:
+
+         Break your classes into smaller, more focused units.
+
+         If a class handles multiple tasks (e.g., data management and UI rendering), separate those tasks into different classes.
+
+         Each class should do only one thing well.
+
+         Example:
+         Instead of having a UserManager class that handles user login, registration, and database interaction, create:
+
+         UserAuthenticator
+
+         UserRegistrationService
+
+         UserRepository
+
+         🔹 2. Open/Closed Principle (OCP)
+         Definition: Software entities (classes, modules, functions) should be open for extension but closed for modification.
+
+         What You Should Do:
+
+         Write your classes in a way that allows new functionality to be added through inheritance or composition rather than changing existing code.
+
+         Use interfaces or abstract classes to allow future extensibility.
+
+         Example:
+         If you have a PaymentProcessor class, use an interface like PaymentMethod and implement new methods like CreditCardPayment, PayPalPayment, etc., without touching the main processor logic.
+
+         🔹 3. Liskov Substitution Principle (LSP)
+         Definition: Subtypes must be substitutable for their base types without altering the correctness of the program.
+
+         What You Should Do:
+
+         Ensure that subclasses override the behavior of a parent class in a way that does not break existing code.
+
+         Don’t override methods in a way that changes their expected behavior.
+
+         Example:
+         If you have a Bird class with a fly() method, and a Penguin subclass can’t fly, then Penguin should not inherit from Bird. This violates LSP.
+
+         🔹 4. Interface Segregation Principle (ISP)
+         Definition: No client should be forced to depend on methods it does not use.
+
+         What You Should Do:
+
+         Split large interfaces into smaller, more specific ones.
+
+         Each class should implement only the interfaces it needs.
+
+         Example:
+         Instead of a big interface like:
+
+         java
+         Copy
+         Edit
+         interface Worker {
+           void work();
+           void eat();
+         }
+         Create:
+
+         java
+         Copy
+         Edit
+         interface Workable {
+           void work();
+         }
+
+         interface Eatable {
+           void eat();
+         }
+         Let classes implement only what they need.
+
+         🔹 5. Dependency Inversion Principle (DIP)
+         Definition: High-level modules should not depend on low-level modules. Both should depend on abstractions.
+
+         What You Should Do:
+
+         Depend on interfaces or abstract classes, not concrete implementations.
+
+         Use dependency injection to provide required objects to your classes.
+
+         Example:
+         Instead of this:
+
+         java
+         Copy
+         Edit
+         class Light {
+           Switch sw = new Switch(); // tightly coupled
+         }
+         Use:
+
+         java
+         Copy
+         Edit
+         class Light {
+           Switchable switchable;
+
+           public Light(Switchable switchable) {
+             this.switchable = switchable;
+           }
+         }
+         Where Switchable is an interface.
+
+         ✅ Summary Table for Your Document
+         Principle	Description	What You Should Do
+         SRP	One class = One responsibility	Break classes into focused components
+         OCP	Extend behavior without modifying existing code	Use abstraction, inheritance, or composition
+         LSP	Subclasses should behave like their parent class	Ensure consistent behavior in subclassing
+         ISP	Don't force classes to implement unused methods	Use multiple, small, specific interfaces
+         DIP	Rely on abstractions, not concrete classes	Use dependency injection and interfaces
+
+         If you're including this in your document (like a project report, code standard, or design doc), you should:
+
+         Briefly define each principle.
+
+         Provide code snippets or architecture diagrams showing how you applied them.
+
+         Explain the benefits in your project: e.g., easier to test, update, or maintain.
