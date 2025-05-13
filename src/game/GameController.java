@@ -198,7 +198,7 @@ public class GameController {
         double exterminatorProgress = Math.min(1.0, shotsHit / 20.0);
         achievementManager.updateAchievement("Enemy Exterminator", exterminatorProgress);
 
-        // Sharp Shooter achievement: if shotsFired > 10, progress = accuracy / 0.99 capped at 1.0, else 0
+        // Sharp Shooter achievement
         double sharpShooterProgress = 0.0;
         if (shotsFired > 10) {
             sharpShooterProgress = Math.min(1.0, accuracy / 0.99);
