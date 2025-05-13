@@ -47,7 +47,8 @@ public class AchievementManager {
 
         String achievementName = achievement.getName();
         if (achievements.containsKey(achievementName)) {
-            throw new IllegalArgumentException("Achievement already registered: " + achievementName);
+            throw new IllegalArgumentException(
+                    "Achievement already registered: " + achievementName);
         }
 
         achievements.put(achievementName, achievement);
@@ -59,7 +60,8 @@ public class AchievementManager {
      * @param achievementName the name of the achievement.
      * @param absoluteProgressValue the value the achievement's progress will be set to.
      * @throws IllegalArgumentException if no achievement is registered under the provided name.
-     * @requires achievementName must be a non-null, non-empty string identifying a registered achievement.
+     * @requires achievementName must be a non-null, non-empty string identifying a registered
+     *           achievement.
      */
     public void updateAchievement(String achievementName, double absoluteProgressValue) {
         if (achievementName == null || achievementName.isEmpty()) {
@@ -68,15 +70,16 @@ public class AchievementManager {
 
         Achievement achievement = achievements.get(achievementName);
         if (achievement == null) {
-            throw new IllegalArgumentException("No achievement registered with name: " + achievementName);
+            throw new IllegalArgumentException(
+                    "No achievement registered with name: " + achievementName);
         }
 
         achievement.setProgress(absoluteProgressValue);
     }
 
     /**
-     * Checks all registered achievements. For any achievement that is mastered and has not yet been logged,
-     * this method logs the event via AchievementFile, and marks the achievement as logged.
+     * Checks all registered achievements. For any achievement that is mastered and has not yet been
+     * logged, this method logs the event via AchievementFile, and marks the achievement as logged.
      */
     public void logAchievementMastered() {
         for (Map.Entry<String, Achievement> entry : achievements.entrySet()) {
